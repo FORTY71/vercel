@@ -1,3 +1,7 @@
 export default function handler(req, res) {
-  return res.status(200).json({ message: "Server is online ✅" });
+  res.status(200).json({
+    success: true,
+    message: "Server aktif ✅",
+    time: new Date().toISOString()
+  });
 }
