@@ -1,20 +1,28 @@
-// api/connect.js
-// Simple serverless endpoint for Vercel that returns a JSON "login success" response.
+import express from "express";
+import cors from "cors";
+import axios from "axios";
 
-export default function handler(req, res) {
-  const body = req.method === 'POST' ? req.body : req.query;
-  const token = (body && (body.token || body.auth)) || "mock-token-venom-12345";
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-  const resp = {
-    status: "thanhcong",
-    message: "Login successful.",
-    token: token,
-    user: {
-      id: "dev-user",
-      name: "Dev Tester"
-    }
-  };
+app.get("/", (req, res) => {
+  res.json({ status: "ok", message: "API is running on Vercel!" });
+});
 
-  res.setHeader('Content-Type', 'application/json');
-  res.status(200).json(resp);
-}
+app.post("/connect", async (req, res) => {
+  try {
+    const { key } = req.body;
+
+    // kirim data key ke panel asli (contoh aja)
+    const response = await axios.post("https://free.kuropanel.me/public/connect", { key });
+
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
